@@ -48,7 +48,7 @@ class AuthController (
             )
         }
 
-        val user = userService.findByUsername(payload.username.replace(" ", "")) as User
+        val user = userService.findByUsername(payload.username) as User
 
         return RegisterResponseDto(
             result = mapOf(),
@@ -82,7 +82,7 @@ class AuthController (
         val user = User(
             email = payload.email,
             name = payload.name,
-            username = payload.username.replace(" ", ""),
+            username = payload.username,
             password = hashService.hashBcrypt(payload.password),
         )
 
