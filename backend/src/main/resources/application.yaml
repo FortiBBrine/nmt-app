@@ -1,0 +1,21 @@
+server:
+  error:
+    include-message: always
+spring:
+  application:
+    name: NmtApp
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRESQL_URL}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+security:
+  jwt:
+    secret-key: AzomDE3TeXUOtYaOP/mkRvDd6br4l2Qm8RffNQkD1KE=
+    expiration-time: 3600000
