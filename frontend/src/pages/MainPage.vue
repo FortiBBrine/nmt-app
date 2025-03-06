@@ -18,12 +18,30 @@
         <Button type="button" label="Згенерувати" @click="generate"></Button>
       </div>
     </Dialog>
+
+    <div v-show="token != null">
+      <p>Всі можливі тести:</p>
+      <div v-for="question in questions" :key="question.id">
+        <p><strong>Тема:</strong> {{ question.study }}</p>
+        <p><strong>Опис:</strong> {{ question.description }}</p>
+        <p><strong>Відповіді:</strong></p>
+        <ul>
+          <li v-for="answer in question.answers" :key="answer">{{ answer }}</li>
+        </ul>
+        <p><strong>Правильні відповіді:</strong> {{ question.trueAnswers.join(', ') }}</p>
+        <p><strong>Тип:</strong> {{ question.type }}</p>
+        <hr />
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
+import {useStore} from "vuex";
+import {allQuestions, QuestionDto} from "@/api/auth/questionsApi";
 
 const dialogVisible = ref(false);
 const studies = ref([
@@ -31,10 +49,23 @@ const studies = ref([
   { name: "Математика" }
 ]);
 
+const store = useStore();
+
+const token = computed(() => store.state.auth.token);
+
 const selectedSubject = ref<{ name: string }>();
 const count = ref(0);
 
 const router = useRouter();
+const questions = ref<QuestionDto[]>([]);
+
+onMounted(async () => {
+  if (token != null) {
+
+    const someQuestions = await allQuestions();
+    questions.value = [...someQuestions];
+  }
+});
 
 function generate() {
   if (selectedSubject.value === undefined) return;

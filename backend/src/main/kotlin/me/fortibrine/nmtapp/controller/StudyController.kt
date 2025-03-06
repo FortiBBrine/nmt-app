@@ -51,8 +51,8 @@ class StudyController (
             ) }
     }
 
-    @PostMapping("/{id}/add")
     @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{id}/add")
     fun addQuestion(
         @PathVariable id: Long,
 
@@ -78,9 +78,8 @@ class StudyController (
         )
     }
 
-
-    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
     fun addStudy(
         @RequestBody
         studyDto: StudyRequestDto,
