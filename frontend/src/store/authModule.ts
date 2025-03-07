@@ -1,14 +1,14 @@
 interface AuthState {
-    token: string | null;
+    isAuth: boolean;
 }
 
 export const authModule = {
     state: (): AuthState => ({
-        token: null,
+        isAuth: false,
     }),
     mutations: {
-        setToken(state: AuthState, token: string | null) {
-            state.token = token;
+        setAuth(state: AuthState, auth: boolean) {
+            state.isAuth = auth;
         }
     },
     namespaced: true

@@ -9,7 +9,7 @@
 <script setup lang="ts">
 
 import {ref} from "vue";
-import {login} from "@/api/auth/loginApi";
+import {isAuthenticated, login} from "@/api/auth/loginApi";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 
@@ -22,9 +22,8 @@ const router = useRouter();
 const loginButton = async () => {
   const data = await login(username.value, password.value);
 
-  if (data.token != null) {
-    store.commit("auth/setToken", data.token);
-    localStorage.setItem("token", data.token);
+  if (await isAuthenticated()) {
+    store.commit("auth/setAuth", true);
     await router.push("/");
     return;
   }

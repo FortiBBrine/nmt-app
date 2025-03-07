@@ -6,8 +6,7 @@ export type RegisterResponseDto = {
         username: string | undefined,
         password: string | undefined,
         email: string | undefined
-    },
-    token: string | null
+    }
 };
 
 export async function register(

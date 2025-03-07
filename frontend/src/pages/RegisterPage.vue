@@ -13,6 +13,7 @@ import {ref} from "vue";
 import {register} from "@/api/auth/registerApi";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
+import {isAuthenticated} from "@/api/auth/loginApi";
 
 const name = ref("");
 const username = ref("");
@@ -25,12 +26,12 @@ const router = useRouter();
 const registerButton = async () => {
   const data = await register(email.value, name.value, username.value, password.value);
 
-  if (data.token != null) {
-    store.commit("auth/setToken", data.token);
-    localStorage.setItem("token", data.token);
+  if (await isAuthenticated()) {
+    store.commit("auth/setAuth", true);
     await router.push("/");
     return;
   }
+
 };
 
 </script>

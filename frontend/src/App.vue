@@ -4,7 +4,7 @@
 
     <router-link to="/">Головна сторінка</router-link>
 
-    <div v-if="token == null">
+    <div v-if="!isAuth">
       <router-link to="/login">Сторінка авторизації</router-link>
       <br>
       <router-link to="/register">Сторінка реєстрації</router-link>
@@ -21,15 +21,14 @@
 
 import {computed, onMounted} from "vue";
 import {useStore} from "vuex";
-import {logout} from "@/api/api";
+import {isAuthenticated, logout} from "@/api/auth/loginApi";
 
 const store = useStore();
 
-const token = computed(() => store.state.auth.token);
+const isAuth = computed(() => store.state.auth.isAuth);
 
 onMounted(async () => {
-  store.commit("auth/setToken", localStorage.getItem("token"));
-
+  store.commit("auth/setAuth", await isAuthenticated());
 });
 
 </script>

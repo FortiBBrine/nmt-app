@@ -19,7 +19,7 @@
       </div>
     </Dialog>
 
-    <div v-show="token != null">
+    <div v-show="isAuth">
       <p>Всі можливі тести:</p>
       <div v-for="question in questions" :key="question.id">
         <p><strong>Тема:</strong> {{ question.study }}</p>
@@ -51,17 +51,16 @@ const studies = ref([
 
 const store = useStore();
 
-const token = computed(() => store.state.auth.token);
-
 const selectedSubject = ref<{ name: string }>();
 const count = ref(0);
+
+const isAuth = computed(() => store.state.auth.isAuth);
 
 const router = useRouter();
 const questions = ref<QuestionDto[]>([]);
 
 onMounted(async () => {
-  if (token != null) {
-
+  if (isAuth.value) {
     const someQuestions = await allQuestions();
     questions.value = [...someQuestions];
   }
