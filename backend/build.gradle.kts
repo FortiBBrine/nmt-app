@@ -21,7 +21,7 @@ tasks {
 	}
 
 	bootJar {
-		archiveFileName.set("LearningApp.jar")
+		archiveFileName.set("NmtApp.jar")
 	}
 
 }
