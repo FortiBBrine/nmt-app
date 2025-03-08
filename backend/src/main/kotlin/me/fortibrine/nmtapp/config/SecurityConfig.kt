@@ -1,6 +1,5 @@
 package me.fortibrine.nmtapp.config
 
-import jakarta.servlet.http.HttpServletRequest
 import me.fortibrine.nmtapp.service.TokenService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,9 +10,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException
+import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -28,25 +27,6 @@ class SecurityConfig (
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
 
-        http.addFilterBefore({ request, response, chain ->
-            val httpRequest = request as HttpServletRequest
-
-            val accessToken = request.cookies?.find { it.name == "accessToken" }?.value
-            if (accessToken != null) {
-                val user = tokenService.parseToken(accessToken)
-                if (user == null) {
-                    SecurityContextHolder.clearContext()
-                    chain.doFilter(request, response)
-                    return@addFilterBefore
-                }
-
-                val authentication = UsernamePasswordAuthenticationToken(user, null, user.roles.map { SimpleGrantedAuthority(it) })
-                SecurityContextHolder.getContext().authentication = authentication
-            }
-
-            chain.doFilter(request, response)
-        }, UsernamePasswordAuthenticationFilter::class.java)
-
         // Define public and private routes
         http.authorizeHttpRequests { request ->
             request
@@ -59,6 +39,11 @@ class SecurityConfig (
         // Configure JWT
         http.oauth2ResourceServer { oauth2 ->
             oauth2.jwt(Customizer.withDefaults())
+        }
+        http.authenticationManager { auth ->
+            val jwt = auth as BearerTokenAuthenticationToken
+            val user = tokenService.parseToken(jwt.token) ?: throw InvalidBearerTokenException("Invalid token")
+            UsernamePasswordAuthenticationToken(user, "", user.roles.map { SimpleGrantedAuthority(it) })
         }
 
         // Other configuration

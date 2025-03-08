@@ -9,7 +9,7 @@ import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import Select from "primevue/select";
 import KeyFilter from "primevue/keyfilter";
-import {InputNumber} from "primevue";
+import {InputNumber, Toolbar} from "primevue";
 
 const app = createApp(App);
 
@@ -26,7 +26,8 @@ app
     .component("Dialog", Dialog)
     .component("InputText", InputText)
     .component("Select", Select)
-    .component("InputNumber", InputNumber);
+    .component("InputNumber", InputNumber)
+    .component("Toolbar", Toolbar);
 
 app
     .use(router)

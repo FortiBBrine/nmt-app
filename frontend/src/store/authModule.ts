@@ -1,15 +1,23 @@
-interface AuthState {
-    isAuth: boolean;
+export interface AuthState {
+    token: string | null;
 }
 
 export const authModule = {
     state: (): AuthState => ({
-        isAuth: false,
+        token: localStorage.getItem("accessToken") || null,
     }),
     mutations: {
-        setAuth(state: AuthState, auth: boolean) {
-            state.isAuth = auth;
+        setToken: (state: AuthState, token: string) => {
+            state.token = token;
+            localStorage.setItem("accessToken", token);
+        },
+        clearToken: (state: AuthState) => {
+            state.token = null;
+            localStorage.removeItem("accessToken");
         }
+    },
+    getters: {
+        isAuth: (state: AuthState) => state.token !== null,
     },
     namespaced: true
 };

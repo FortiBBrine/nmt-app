@@ -1,7 +1,8 @@
 import {api} from "@/api/api";
 
 export type RegisterResponseDto = {
-    result: {
+    token: string | null
+    errors: {
         name: string | undefined,
         username: string | undefined,
         password: string | undefined,

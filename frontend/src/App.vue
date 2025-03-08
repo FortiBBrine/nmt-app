@@ -1,16 +1,25 @@
 <template>
-  <div>
-    <h1 class="text-4xl font-bold">Верхня частина сайту</h1>
+  <div class="h-screen flex flex-col">
 
-    <router-link to="/">Головна сторінка</router-link>
-
-    <div v-if="!isAuth">
-      <router-link to="/login">Сторінка авторизації</router-link>
-      <br>
-      <router-link to="/register">Сторінка реєстрації</router-link>
-    </div>
-    <div v-else>
-      <p @click="logout">Вийти з акаунту</p>
+    <div>
+      <Toolbar>
+        <template #start>
+          <div class="flex items-center gap-2">
+            <router-link to="/"><p class="font-bold">NmtApp</p></router-link>
+          </div>
+        </template>
+        <template #end>
+          <div class="flex items-center gap-2">
+            <template v-if="!isAuth">
+              <router-link to="/login"><Button label="Увійти" /></router-link>
+              <router-link to="/register"><Button label="Зареєструватись" /></router-link>
+            </template>
+            <template v-else>
+              <Button @click="logout" label="Вийти з акаунту" />
+            </template>
+          </div>
+        </template>
+      </Toolbar>
     </div>
 
     <router-view />
@@ -19,17 +28,13 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted} from "vue";
+import {computed} from "vue";
 import {useStore} from "vuex";
-import {isAuthenticated, logout} from "@/api/auth/loginApi";
+import {logout} from "@/api/auth/loginApi";
 
 const store = useStore();
 
-const isAuth = computed(() => store.state.auth.isAuth);
-
-onMounted(async () => {
-  store.commit("auth/setAuth", await isAuthenticated());
-});
+const isAuth = computed(() => store.getters["auth/isAuth"]);
 
 </script>
 

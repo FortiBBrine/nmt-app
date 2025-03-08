@@ -54,7 +54,7 @@ const store = useStore();
 const selectedSubject = ref<{ name: string }>();
 const count = ref(0);
 
-const isAuth = computed(() => store.state.auth.isAuth);
+const isAuth = computed(() => store.getters["auth/isAuth"]);
 
 const router = useRouter();
 const questions = ref<QuestionDto[]>([]);

@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <InputText type="text" v-model="username" placeholder="Нікнейм" />
-    <InputText type="password" v-model="password" placeholder="Пароль" />
-    <Button type="submit" severity="secondary" label="Увійти" @click="loginButton" />
+  <div class="flex items-center justify-center flex-1">
+    <div class="size-min flex flex-col gap-2">
+      <InputText type="text" v-model="username" placeholder="Нікнейм" />
+      <InputText type="password" v-model="password" placeholder="Пароль" />
+      <Button type="submit" severity="secondary" label="Увійти" @click="loginButton" />
+    </div>
   </div>
 </template>
 
@@ -22,8 +24,8 @@ const router = useRouter();
 const loginButton = async () => {
   const data = await login(username.value, password.value);
 
-  if (await isAuthenticated()) {
-    store.commit("auth/setAuth", true);
+  if (data.token !== null) {
+    store.commit("auth/setToken", data.token);
     await router.push("/");
     return;
   }
