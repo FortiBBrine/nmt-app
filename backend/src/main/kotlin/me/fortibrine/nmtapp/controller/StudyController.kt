@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -49,6 +50,14 @@ class StudyController (
                 trueAnswers = question.trueAnswers.toList(),
                 type = question.type
             ) }
+    }
+
+    @GetMapping("/{id}/types")
+    fun allQuestionTypes(
+        @PathVariable id: Long,
+    ): List<String> {
+        return questionRepository.findAllByStudyId(id)
+            .map { question -> question.type }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -92,6 +101,39 @@ class StudyController (
             id = study.id!!,
             name = study.name,
         )
+    }
+
+    @GetMapping("/{id}/generate")
+    fun generate(
+        @PathVariable id: Long,
+
+        @RequestParam payload: Map<String, String>,
+    ): List<QuestionDto> {
+        val questions = mutableListOf<QuestionDto>()
+
+        val questionCountMap = payload.map { entry ->
+            entry.key to entry.value.toInt()
+        }.toMap()
+
+        questionCountMap.forEach { (type, count) ->
+            val questionsOfType = questionRepository.findAllByStudy_IdAndType(id, type)
+
+            val selectedQuestions = questionsOfType.shuffled().take(count)
+
+            questions.addAll(selectedQuestions
+                .filter { question -> question.id != null }
+                .filter { question -> question.study != null }
+                .map { QuestionDto(
+                    id = it.id!!,
+                    study = it.study!!.name,
+                    type = it.type,
+                    trueAnswers = it.trueAnswers.toList(),
+                    description = it.description,
+                    answers = it.answers.toList(),
+            ) })
+        }
+
+        return questions
     }
 
 }

@@ -14,3 +14,11 @@ export async function allQuestions(): Promise<QuestionDto[]> {
 
     return response.data;
 }
+
+export async function createTest(studyId: number, count: string): Promise<QuestionDto[]> {
+    const response = await api.get("/studies/" + studyId + "/generate", {
+        params: JSON.parse(count)
+    });
+
+    return response.data;
+}

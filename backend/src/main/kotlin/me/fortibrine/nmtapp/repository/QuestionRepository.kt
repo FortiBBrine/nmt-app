@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface QuestionRepository: JpaRepository<Question, Long> {
     fun findAllByStudyId(studyId: Long): List<Question>
+    fun findAllByStudy_IdAndType(id: Long, type: String): List<Question>
 }
