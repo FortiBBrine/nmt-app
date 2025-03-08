@@ -17,13 +17,14 @@ class RegisterValidator(
         val payload = target as RegisterRequestDto
 
         if (SecurityContextHolder.getContext().authentication.principal is User) {
-            errors.rejectValue("username", "", "You are already authenticated")
+            errors.rejectValue("username", "", "Ви вже автентифіковані")
             return
         }
 
         if (userService.existsByName(payload.username)) {
-            errors.rejectValue("username", "", "Already exists")
+            errors.rejectValue("username", "", "Ім'я користувача вже існує")
         }
+
 
     }
 

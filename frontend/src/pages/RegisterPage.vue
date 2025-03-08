@@ -1,10 +1,22 @@
 <template>
   <div class="flex items-center justify-center flex-1">
     <div class="size-min flex flex-col gap-2">
-      <InputText type="text" v-model="name" placeholder="Ім'я користувача" />
-      <InputText type="text" v-model="username" placeholder="Нікнейм" />
-      <InputText type="email" v-model="email" placeholder="Електронна скринька" />
+      <InputText type="text" v-model="name" placeholder="Ім'я" />
+      <template v-if="!!nameErrors">
+        <span>{{ nameErrors }}</span>
+      </template>
+      <InputText type="text" id="username" name="username" autocomplete="username" v-model="username" placeholder="Ім'я користувача" />
+      <template v-if="!!usernameErrors">
+        <span>{{ usernameErrors }}</span>
+      </template>
+      <InputText type="email" id="email" name="email" autocomplete="email" v-model="email" placeholder="Електронна скринька" />
+      <template v-if="!!emailErrors">
+        <span>{{ emailErrors }}</span>
+      </template>
       <InputText type="password" v-model="password" placeholder="Пароль" />
+      <template v-if="!!passwordErrors">
+        <span>{{ passwordErrors }}</span>
+      </template>
       <Button type="submit" severity="secondary" label="Зареєструватись" @click="registerButton" />
 
     </div>
@@ -22,6 +34,11 @@ const username = ref("");
 const password = ref("");
 const email = ref("");
 
+const nameErrors = ref<string | undefined>(undefined);
+const usernameErrors = ref<string | undefined>(undefined);
+const emailErrors = ref<string | undefined>(undefined);
+const passwordErrors = ref<string | undefined>(undefined);
+
 const store = useStore();
 const router = useRouter();
 
@@ -33,6 +50,11 @@ const registerButton = async () => {
     await router.push("/");
     return;
   }
+
+  nameErrors.value = data.errors.name;
+  usernameErrors.value = data.errors.username;
+  emailErrors.value = data.errors.email;
+  passwordErrors.value = data.errors.password;
 
 };
 
