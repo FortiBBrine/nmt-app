@@ -1,11 +1,11 @@
 <template>
   <div class="flex items-center justify-center flex-1">
     <div class="size-min flex flex-col gap-2">
-      <InputText type="text" id="username" name="username" autocomplete="username" v-model="username" placeholder="Ім'я користувача" />
+      <InputText type="text" v-keyfilter.alphanum id="username" name="username" autocomplete="username" v-model="username" placeholder="Ім'я користувача" />
       <template v-if="!!usernameErrors">
         <span>{{ usernameErrors }}</span>
       </template>
-      <InputText type="password" v-model="password" placeholder="Пароль" />
+      <Password v-model="password" toggleMask placeholder="Пароль" />
       <Button type="submit" severity="secondary" label="Увійти" @click="loginButton" />
     </div>
   </div>

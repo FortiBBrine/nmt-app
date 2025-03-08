@@ -1,11 +1,11 @@
 <template>
   <div class="flex items-center justify-center flex-1">
     <div class="size-min flex flex-col gap-2">
-      <InputText type="text" v-model="name" placeholder="Ім'я" />
+      <InputText type="text" v-model="name" placeholder="Ім'я" maxlength="32" />
       <template v-if="!!nameErrors">
         <span>{{ nameErrors }}</span>
       </template>
-      <InputText type="text" id="username" name="username" autocomplete="username" v-model="username" placeholder="Ім'я користувача" />
+      <InputText type="text" v-keyfilter.alphanum id="username" name="username" autocomplete="username" v-model="username" placeholder="Ім'я користувача" maxlength="20" />
       <template v-if="!!usernameErrors">
         <span>{{ usernameErrors }}</span>
       </template>
@@ -13,7 +13,7 @@
       <template v-if="!!emailErrors">
         <span>{{ emailErrors }}</span>
       </template>
-      <InputText type="password" v-model="password" placeholder="Пароль" />
+      <Password v-model="password" toggleMask placeholder="Пароль" />
       <template v-if="!!passwordErrors">
         <span>{{ passwordErrors }}</span>
       </template>

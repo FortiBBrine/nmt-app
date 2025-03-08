@@ -11,9 +11,11 @@ data class RegisterRequestDto (
     val email: String,
 
     @field:NotBlank(message = "Будь ласка, вкажіть ім'я")
+    @field:Size(min = 6, max = 32, message = "Довжина має бути від 6 до 32 символів")
     val name: String,
 
     @field:NotBlank(message = "Будь ласка, вкажіть ім'я користувача")
+    @field:Size(min = 6, max = 20, message = "Довжина має бути від 6 до 20 символів")
     @field:Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Ім'я користувача може містити лише літери англійського алфавіту та цифри")
     val username: String,
 
