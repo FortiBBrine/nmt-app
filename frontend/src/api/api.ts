@@ -4,8 +4,7 @@ import store from "@/store/store";
 import router from "@/router/router";
 
 export const api = axios.create({
-    baseURL: 'http://0.0.0.0:8080/api/',
-    withCredentials: true,
+    baseURL: 'https://nmt-app.onrender.com/api'
 });
 
 api.interceptors.request.use((request) => {
