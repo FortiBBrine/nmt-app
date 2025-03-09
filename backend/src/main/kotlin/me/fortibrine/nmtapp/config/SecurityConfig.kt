@@ -69,7 +69,8 @@ class SecurityConfig (
         configuration.allowedOrigins = listOf(
             "http://localhost:3000",  // Dev
             "http://0.0.0.0:3000",
-            "http://107.161.154.205:3000" // Production
+            "http://107.161.154.205:3000", // Production
+	    "https://nmt-app-1.onrender.com"
         )
 
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
