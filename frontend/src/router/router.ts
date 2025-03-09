@@ -3,6 +3,9 @@ import MainPage from "@/pages/MainPage.vue";
 import QuestionsPage from "@/pages/QuestionsPage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import RegisterPage from "@/pages/RegisterPage.vue";
+import CreateQuestionPage from "@/pages/CreateQuestionPage.vue";
+import NotFoundPage from "@/pages/NotFoundPage.vue";
+import ForbiddenPage from "@/pages/ForbiddenPage.vue";
 
 const routes = [
     {
@@ -20,6 +23,18 @@ const routes = [
     {
         path: '/register',
         component: RegisterPage
+    },
+    {
+        path: '/questions/create',
+        component: CreateQuestionPage
+    },
+    {
+        path: '/forbidden',
+        component: ForbiddenPage
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        component: NotFoundPage
     }
 ];
 

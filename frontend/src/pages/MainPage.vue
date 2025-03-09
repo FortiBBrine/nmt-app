@@ -4,7 +4,7 @@
       <p>Головна сторінка</p>
       <Button label="Згенерувати" @click="generateDialogVisible = true" />
       <Button label="Створити предмет" @click="createStudyDialogVisible = true" />
-      <Button label="Створити питання" @click="createQuestionDialogVisible = true" />
+      <router-link to="/questions/create"><Button label="Створити питання" /></router-link>
     </div>
 
     <GenerateDialog v-model="generateDialogVisible" />
@@ -20,7 +20,6 @@ import CreateStudyDialog from "@/components/CreateStudyDialog.vue";
 
 const generateDialogVisible = ref(false);
 const createStudyDialogVisible = ref(false);
-const createQuestionDialogVisible = ref(false);
 
 </script>
 

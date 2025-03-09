@@ -22,3 +22,13 @@ export async function createTest(studyId: number, count: string): Promise<Questi
 
     return response.data;
 }
+
+export async function createQuestion(studyId: number, type: string, description: string, answers: string[], correctAnswers: number[]): Promise<void> {
+    const response = await api.post("/studies/" + studyId + "/add", {
+        description: description,
+        answers: answers,
+        trueAnswers: correctAnswers,
+        type: type
+    });
+}
+

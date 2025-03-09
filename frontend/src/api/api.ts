@@ -1,6 +1,7 @@
 import axios from "axios";
 import {logout} from "@/api/auth/loginApi";
 import store from "@/store/store";
+import router from "@/router/router";
 
 export const api = axios.create({
     baseURL: 'http://0.0.0.0:8080/api/',
@@ -26,7 +27,11 @@ api.interceptors.response.use(async (response) => {
     if (axios.isAxiosError(error)) {
         if (error.response !== undefined && error.response.status === 401) {
             logout();
+            await router.push("/login");
         }
-        console.log(error.toJSON());
+        if (error.response !== undefined && error.response.status === 403) {
+            await router.push("/forbidden");
+        }
+        // console.log(error.toJSON());
     }
-})
+});

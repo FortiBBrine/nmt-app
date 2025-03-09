@@ -17,7 +17,7 @@ export const authModule = {
         }
     },
     getters: {
-        isAuth: (state: AuthState) => state.token !== null,
+        isAuth: (state: AuthState) => !!state.token,
     },
     namespaced: true
 };

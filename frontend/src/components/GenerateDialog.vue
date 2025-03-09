@@ -60,8 +60,7 @@ const generate = () => {
 };
 
 onMounted(async () => {
-  console.log("auth", isAuth);
-  if (isAuth) {
+  if (isAuth.value) {
     somethingLoadingForDialog.value = true;
     const apiStudies = await allStudies();
 

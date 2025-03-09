@@ -9,7 +9,8 @@ import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import Select from "primevue/select";
 import KeyFilter from "primevue/keyfilter";
-import {InputNumber, Password, RadioButton, Toolbar} from "primevue";
+import {InputNumber, Password, RadioButton, Textarea, Toolbar} from "primevue";
+import Editor from "primevue/editor";
 
 const app = createApp(App);
 
@@ -29,7 +30,9 @@ app
     .component("InputNumber", InputNumber)
     .component("Toolbar", Toolbar)
     .component("Password", Password)
-    .component("RadioButton", RadioButton);
+    .component("RadioButton", RadioButton)
+    .component("Editor", Editor)
+    .component("Textarea", Textarea);
 
 app
     .use(router)
