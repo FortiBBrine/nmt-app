@@ -5,6 +5,6 @@ data class QuestionDto (
     val study: String,
     val description: String,
     val answers: List<String>,
-    val trueAnswers: List<String>,
+    val trueAnswers: List<Int>,
     val type: String,
 )

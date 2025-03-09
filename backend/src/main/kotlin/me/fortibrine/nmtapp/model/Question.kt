@@ -17,7 +17,7 @@ class Question (
     var answers: List<String> = listOf(),
 
     @field:ElementCollection(fetch = FetchType.EAGER)
-    var trueAnswers: List<String> = listOf(),
+    var trueAnswers: List<Int> = listOf(),
 
     var type: String = "",
 

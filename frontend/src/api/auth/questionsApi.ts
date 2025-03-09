@@ -5,7 +5,7 @@ export type QuestionDto = {
     study: string;
     description: string;
     answers: string[];
-    trueAnswers: string[];
+    trueAnswers: number[];
     type: string;
 };
 

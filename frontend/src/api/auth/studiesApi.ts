@@ -16,3 +16,7 @@ export async function getTypes(studyId: number): Promise<string[]> {
 
     return response.data;
 }
+
+export async function createStudy(studyDto: StudyDto): Promise<void> {
+    const response = await api.post("/studies", studyDto);
+}
