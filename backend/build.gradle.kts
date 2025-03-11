@@ -2,6 +2,7 @@ plugins {
 	id("org.springframework.boot") version "3.3.0"
 	id("io.spring.dependency-management") version "1.1.5"
 	kotlin("jvm") version "1.9.24"
+	kotlin("kapt") version "1.9.24"
 	kotlin("plugin.spring") version "1.9.24"
 }
 
@@ -45,6 +46,9 @@ dependencies {
 
 	implementation("org.codehaus.jackson:jackson-core-asl:1.9.13")
 	implementation("org.codehaus.jackson:jackson-mapper-asl:1.9.13")
+
+	implementation("org.mapstruct:mapstruct:1.5.3.Final")
+	kapt("org.mapstruct:mapstruct-processor:1.5.3.Final")
 
 //	implementation("org.flywaydb:flyway-core")
 
