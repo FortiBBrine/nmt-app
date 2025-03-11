@@ -55,9 +55,10 @@ class StudyController (
     @GetMapping("/{id}/types")
     fun allQuestionTypes(
         @PathVariable id: Long,
-    ): List<String> {
+    ): Set<String> {
         return questionRepository.findAllByStudyId(id)
             .map { question -> question.type }
+            .toSet()
     }
 
     @PreAuthorize("hasRole('ADMIN')")
