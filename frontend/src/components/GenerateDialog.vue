@@ -9,7 +9,7 @@
 
     <div v-for="type in types" :key="type" class="flex items-center gap-4 mb-8">
       <label for="count" class="font-semibold w-24">{{ type }}</label>
-      <InputNumber v-model="count[type]" input-id="count" :min="0" :max="32" class="flex-auto" />
+      <InputNumber @update:model-value="(value) => count.set(type, value)" input-id="count" :min="0" :max="32" class="flex-auto" />
     </div>
     <div class="flex justify-end gap-2">
       <Button type="button" :disabled="somethingLoadingForDialog" label="Згенерувати" @click="generate"></Button>
@@ -20,9 +20,9 @@
 <script setup lang="ts">
 
 import {computed, onMounted, ref, watch} from "vue";
-import {allStudies, getTypes, StudyDto} from "@/api/auth/studiesApi";
+import {allStudies, getTypes, type StudyDto} from "@/api/auth/studiesApi";
 import {useRouter} from "vue-router";
-import {useStore} from "vuex";
+import {useAuthStore} from "@/store/authModule.ts";
 
 const somethingLoadingForDialog = ref<boolean>(false);
 const studies = ref<StudyDto[]>([]);
@@ -31,12 +31,11 @@ const types = ref<string[]>([]);
 const count = new Map<string, number>();
 
 const router = useRouter();
-const store = useStore();
-const isAuth = computed(() => store.getters["auth/isAuth"]);
+const store = useAuthStore();
 
 const props = defineProps<{ modelValue: boolean }>();
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): vold;
+  (e: 'update:modelValue', value: boolean): void;
 }>();
 const model = computed({
   get: () => props.modelValue,
@@ -60,7 +59,7 @@ const generate = () => {
 };
 
 onMounted(async () => {
-  if (isAuth.value) {
+  if (store.isAuth) {
     somethingLoadingForDialog.value = true;
     const apiStudies = await allStudies();
 

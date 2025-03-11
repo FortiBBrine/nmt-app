@@ -1,9 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import store from "@/store/store";
 import router from "@/router/router";
 import PrimeVue from "primevue/config";
-import Lara from "@primevue/themes/lara";
+import Lara from "@primeuix/themes/lara";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
@@ -11,7 +10,9 @@ import Select from "primevue/select";
 import KeyFilter from "primevue/keyfilter";
 import {InputNumber, Password, RadioButton, Textarea, Toolbar} from "primevue";
 import Editor from "primevue/editor";
+import {createPinia} from "pinia";
 
+const pinia = createPinia();
 const app = createApp(App);
 
 app
@@ -36,5 +37,5 @@ app
 
 app
     .use(router)
-    .use(store)
+    .use(pinia)
     .mount('#app');

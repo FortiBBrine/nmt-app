@@ -10,7 +10,7 @@
         </template>
         <template #end>
           <div class="flex items-center gap-2">
-            <template v-if="!isAuth">
+            <template v-if="!store.isAuth">
               <router-link to="/login"><Button label="Увійти" /></router-link>
               <router-link to="/register"><Button label="Зареєструватись" /></router-link>
             </template>
@@ -28,16 +28,13 @@
 
 <script setup lang="ts">
 
-import {computed} from "vue";
-import {useStore} from "vuex";
 import {logout} from "@/api/auth/loginApi";
+import {useAuthStore} from "@/store/authModule.ts";
 
-const store = useStore();
-
-const isAuth = computed(() => store.getters["auth/isAuth"]);
-
+const store = useAuthStore();
 </script>
 
-<style scoped>
+<style>
+@import "tailwindcss";
 
 </style>

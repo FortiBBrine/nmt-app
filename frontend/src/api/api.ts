@@ -1,7 +1,7 @@
 import axios from "axios";
 import {logout} from "@/api/auth/loginApi";
-import store from "@/store/store";
 import router from "@/router/router";
+import {useAuthStore} from "@/store/authModule.ts";
 
 export const api = axios.create({
     baseURL: 'https://nmt-app.onrender.com/api'
@@ -9,8 +9,10 @@ export const api = axios.create({
 
 api.interceptors.request.use((request) => {
 
-    if (store.getters["auth/isAuth"]) {
-        request.headers["Authorization"] = "Bearer " + store.state.auth.token;
+    const store = useAuthStore();
+
+    if (store.isAuth) {
+        request.headers["Authorization"] = "Bearer " + store.token;
     }
 
     return request;

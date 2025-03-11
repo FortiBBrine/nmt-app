@@ -1,5 +1,5 @@
 import {api} from "@/api/api";
-import store from "@/store/store";
+import {useAuthStore} from "@/store/authModule.ts";
 
 export type LoginResponseDto = {
     token: string | null
@@ -19,5 +19,6 @@ export async function login(username: string, password: string): Promise<LoginRe
 }
 
 export function logout() {
-    store.commit("auth/clearToken");
+    const store = useAuthStore();
+    store.clearToken();
 }

@@ -15,22 +15,22 @@
 
 import {ref} from "vue";
 import {login} from "@/api/auth/loginApi";
-import {useStore} from "vuex";
 import {useRouter} from "vue-router";
+import {useAuthStore} from "@/store/authModule.ts";
 
 const username = ref("");
 const password = ref("");
 
 const usernameErrors = ref<string | undefined>(undefined);
 
-const store = useStore();
+const store = useAuthStore();
 const router = useRouter();
 
 const loginButton = async () => {
   const data = await login(username.value, password.value);
 
   if (data.token !== null) {
-    store.commit("auth/setToken", data.token);
+    store.setToken(data.token);
     await router.push("/");
     return;
   }

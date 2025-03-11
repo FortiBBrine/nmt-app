@@ -9,8 +9,8 @@
 
       <div class="flex flex-col gap-4">
         <div class="flex items-center gap-2 border p-4" v-for="(answer, answerIndex) in answers" :key="answer">
-          <RadioButton v-model="correctAnswer" :value="answerIndex" />
-          <label :for="answerIndex">{{ answer }}</label>
+          <RadioButton v-model="correctAnswer" :value="'answer' + answerIndex" />
+          <label :for="'answer' + answerIndex">{{ answer }}</label>
         </div>
       </div>
 
@@ -28,11 +28,11 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, ref} from "vue";
-import {allStudies, StudyDto} from "@/api/auth/studiesApi";
-import {useStore} from "vuex";
+import {onMounted, ref} from "vue";
+import {allStudies, type StudyDto} from "@/api/auth/studiesApi";
 import {createQuestion} from "@/api/auth/questionsApi";
 import {useRouter} from "vue-router";
+import {useAuthStore} from "@/store/authModule.ts";
 
 const description = ref();
 const studies = ref<StudyDto[]>([]);
@@ -44,11 +44,10 @@ const currentAnswer = ref("");
 const correctAnswer = ref<number>();
 
 const router = useRouter();
-const store = useStore();
-const isAuth = computed(() => store.getters["auth/isAuth"]);
+const store = useAuthStore();
 
 onMounted(async () => {
-  if (isAuth.value) {
+  if (store.isAuth) {
     const apiStudies = await allStudies();
 
     studies.value = [...apiStudies];
@@ -56,8 +55,6 @@ onMounted(async () => {
 });
 
 const create = async () => {
-
-  console.log(description.value);
 
   if (!!correctAnswer.value && answers.value.length > 0 && !!type.value && !!subject.value) {
 

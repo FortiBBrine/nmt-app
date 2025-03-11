@@ -26,8 +26,8 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import {register} from "@/api/auth/registerApi";
-import {useStore} from "vuex";
 import {useRouter} from "vue-router";
+import {useAuthStore} from "@/store/authModule.ts";
 
 const name = ref("");
 const username = ref("");
@@ -39,14 +39,14 @@ const usernameErrors = ref<string | undefined>(undefined);
 const emailErrors = ref<string | undefined>(undefined);
 const passwordErrors = ref<string | undefined>(undefined);
 
-const store = useStore();
+const store = useAuthStore();
 const router = useRouter();
 
 const registerButton = async () => {
   const data = await register(email.value, name.value, username.value, password.value);
 
   if (data.token !== null) {
-    store.commit("auth/setToken", data.token);
+    store.setToken(data.token);
     await router.push("/");
     return;
   }

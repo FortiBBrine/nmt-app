@@ -19,7 +19,7 @@ import {createStudy} from "@/api/auth/studiesApi";
 
 const props = defineProps<{ modelValue: boolean }>();
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): vold;
+  (e: 'update:modelValue', value: boolean): void;
 }>();
 const model = computed({
   get: () => props.modelValue,

@@ -1,23 +1,24 @@
-export interface AuthState {
-    token: string | null;
-}
+import {defineStore} from "pinia";
+import {computed, ref} from "vue";
 
-export const authModule = {
-    state: (): AuthState => ({
-        token: localStorage.getItem("accessToken") || null,
-    }),
-    mutations: {
-        setToken: (state: AuthState, token: string) => {
-            state.token = token;
-            localStorage.setItem("accessToken", token);
-        },
-        clearToken: (state: AuthState) => {
-            state.token = null;
-            localStorage.removeItem("accessToken");
-        }
-    },
-    getters: {
-        isAuth: (state: AuthState) => !!state.token,
-    },
-    namespaced: true
-};
+export const useAuthStore = defineStore("auth", () => {
+    const token = ref<string | null>(localStorage.getItem("accessToken") || null);
+    const isAuth = computed(() => !!token.value);
+
+    const setToken = (payload: string) => {
+        token.value = payload;
+        localStorage.setItem("accessToken", token.value);
+    };
+
+    const clearToken = () => {
+        token.value = null;
+        localStorage.removeItem("accessToken");
+    };
+
+    return {
+        token,
+        isAuth,
+        setToken,
+        clearToken,
+    };
+});
