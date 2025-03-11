@@ -2,7 +2,7 @@ package me.fortibrine.nmtapp.model
 
 import jakarta.persistence.*
 
-@Entity(name = "nms-questions")
+@Entity(name = "nmt_questions")
 class Question (
 
     @field:Id

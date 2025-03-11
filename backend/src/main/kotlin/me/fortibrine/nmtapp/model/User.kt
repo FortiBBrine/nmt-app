@@ -2,7 +2,7 @@ package me.fortibrine.nmtapp.model
 
 import jakarta.persistence.*
 
-@Entity(name = "nmt-users")
+@Entity(name = "nmt_users")
 class User (
     @field:Id
     @field:GeneratedValue(strategy = GenerationType.AUTO)
