@@ -1,9 +1,15 @@
-package me.fortibrine.nmtapp.dto.question.request
+package me.fortibrine.nmtapp.dto.question.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(description = "Запит на створення питання")
-data class QuestionRequestDto (
+@Schema(description = "Запитання")
+data class QuestionResponseDto (
+    @field:Schema(description = "Ідентифікатор завдання")
+    val id: Long,
+
+    @field:Schema(description = "Предмет")
+    val study: String,
+
     @field:Schema(description = "Опис завдання")
     val description: String,
 

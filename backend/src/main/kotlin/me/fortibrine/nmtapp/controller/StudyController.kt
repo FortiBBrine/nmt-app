@@ -1,9 +1,13 @@
 package me.fortibrine.nmtapp.controller
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.tags.Tag
 import me.fortibrine.nmtapp.dto.question.request.QuestionRequestDto
-import me.fortibrine.nmtapp.dto.question.response.QuestionDto
+import me.fortibrine.nmtapp.dto.question.response.QuestionResponseDto
 import me.fortibrine.nmtapp.dto.study.request.StudyRequestDto
-import me.fortibrine.nmtapp.dto.study.response.StudyDto
+import me.fortibrine.nmtapp.dto.study.response.StudyResponseDto
 import me.fortibrine.nmtapp.mapper.QuestionMapper
 import me.fortibrine.nmtapp.mapper.StudyMapper
 import me.fortibrine.nmtapp.repository.QuestionRepository
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/studies")
+@Tag(name = "Studies", description = "REST API для керування предметами")
 class StudyController (
     private val studyRepository: StudyRepository,
     private val questionRepository: QuestionRepository,
@@ -29,16 +34,24 @@ class StudyController (
 ) {
 
     @GetMapping
-    fun allStudies(): List<StudyDto> {
+    @Operation(summary = "Отримати список предметів")
+    @ApiResponse(responseCode = "200", description = "Отримано список предметів")
+    fun allStudies(): List<StudyResponseDto> {
         return studyRepository.findAll()
             .filter { study -> study.id != null }
             .map { studyMapper.toDto(it) }
     }
 
     @GetMapping("/{id}/questions")
+    @Operation(
+        summary = "Отримати всі питання навчального курсу",
+        description = "Повертає список запитань для конкретного навчального курсу за його ID"
+    )
+    @ApiResponse(responseCode = "200", description = "Успішне отримання списку питань")
+    @ApiResponse(responseCode = "404", description = "Навчальний курс не знайдено")
     fun allQuestionsOfStudy(
         @PathVariable id: Long,
-    ): List<QuestionDto> {
+    ): List<QuestionResponseDto> {
         return questionRepository.findAllByStudyId(id)
             .filter { question -> question.id != null }
             .filter { question -> question.study != null }
@@ -46,20 +59,37 @@ class StudyController (
     }
 
     @GetMapping("/{id}/types")
+    @Operation(
+        summary = "Отримати всі типи питань для навчального курсу",
+        description = "Повертає унікальний список типів питань, пов'язаних із курсом за його ID"
+    )
+    @ApiResponse(responseCode = "200", description = "Успішне отримання списку типів")
+    @ApiResponse(responseCode = "404", description = "Навчальний курс не знайдено")
     fun allQuestionTypes(
-        @PathVariable id: Long,
+        @PathVariable
+        @Parameter(description = "ID навчального курсу", example = "1")
+        id: Long,
     ): Set<String> {
         return questionRepository.findAllTypesByStudyId(id)
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/add")
+    @Operation(
+        summary = "Додати питання до курсу",
+        description = "Додає нове питання до вказаного навчального курсу (лише для адміністраторів)"
+    )
+    @ApiResponse(responseCode = "201", description = "Питання успішно додано")
+    @ApiResponse(responseCode = "400", description = "Некоректний запит")
+    @ApiResponse(responseCode = "403", description = "Недостатньо прав доступу")
     fun addQuestion(
-        @PathVariable id: Long,
+        @PathVariable
+        @Parameter(description = "ID навчального курсу")
+        id: Long,
 
         @RequestBody
         questionDto: QuestionRequestDto
-    ): QuestionDto {
+    ): QuestionResponseDto {
         val study = studyRepository.findByIdOrNull(id)
         val question = questionRepository.save(questionMapper.toEntity(questionDto, study!!))
 
@@ -68,21 +98,37 @@ class StudyController (
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
+    @Operation(
+        summary = "Додати новий навчальний курс",
+        description = "Створює новий навчальний курс (лише для адміністраторів)"
+    )
+    @ApiResponse(responseCode = "201", description = "Курс успішно створено")
+    @ApiResponse(responseCode = "400", description = "Некоректні вхідні дані")
+    @ApiResponse(responseCode = "403", description = "Недостатньо прав доступу")
     fun addStudy(
         @RequestBody
         studyDto: StudyRequestDto,
-    ): StudyDto {
+    ): StudyResponseDto {
         val study = studyRepository.save(studyMapper.toEntity(studyDto))
         return studyMapper.toDto(study)
     }
 
     @GetMapping("/{id}/generate")
+    @Operation(
+        summary = "Генерувати випадкові питання за типами",
+        description = "Генерує список питань на основі переданих параметрів типу та кількості питань"
+    )
+    @ApiResponse(responseCode = "200", description = "Список питань успішно згенеровано")
+    @ApiResponse(responseCode = "400", description = "Некоректні параметри")
+    @ApiResponse(responseCode = "404", description = "Навчальний курс не знайдено")
     fun generate(
-        @PathVariable id: Long,
+        @PathVariable
+        @Parameter(description = "ID навчального курсу")
+        id: Long,
 
         @RequestParam payload: Map<String, String>,
-    ): List<QuestionDto> {
-        val questions = mutableListOf<QuestionDto>()
+    ): List<QuestionResponseDto> {
+        val questions = mutableListOf<QuestionResponseDto>()
 
         val questionCountMap = payload.map { entry ->
             entry.key to entry.value.toInt()

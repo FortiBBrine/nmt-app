@@ -1,5 +1,8 @@
 package me.fortibrine.nmtapp.controller
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import me.fortibrine.nmtapp.dto.login.LoginRequestDto
 import me.fortibrine.nmtapp.dto.login.LoginResponseDto
@@ -11,12 +14,14 @@ import me.fortibrine.nmtapp.model.User
 import me.fortibrine.nmtapp.service.HashService
 import me.fortibrine.nmtapp.service.TokenService
 import me.fortibrine.nmtapp.service.UserService
+import org.springframework.http.HttpStatus
 import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Auth", description = "REST API для автентифікації та реєстрації")
 class AuthController (
     private val hashService: HashService,
     private val tokenService: TokenService,
@@ -26,18 +31,21 @@ class AuthController (
 ) {
 
     @PostMapping("/login")
+    @Operation(summary = "Увійти в акаунт")
+    @ApiResponse(responseCode = "200", description = "Успішний вхід")
+    @ApiResponse(responseCode = "401", description = "Невірний логін або пароль")
     fun login(
         @Valid
         @RequestBody
         payload: LoginRequestDto,
 
         bindingResult: BindingResult,
-    ): RegisterResponseDto {
+    ): LoginResponseDto {
 
         loginValidator.validate(payload, bindingResult)
 
         if (bindingResult.hasErrors()) {
-            return RegisterResponseDto(
+            return LoginResponseDto(
                 errors = mapOf(
                     *bindingResult.
                     allErrors
@@ -50,24 +58,27 @@ class AuthController (
         val user = userService.findByUsername(payload.username) as User
         val token = tokenService.createToken(user)
 
-        return RegisterResponseDto(
+        return LoginResponseDto(
             token = token
         )
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Зареєструвати акаунт")
+    @ApiResponse(responseCode = "200", description = "Успішна реєстрація")
+    @ApiResponse(responseCode = "400", description = "Помилка валідації")
     fun register(
         @Valid
         @RequestBody
         payload: RegisterRequestDto,
 
         bindingResult: BindingResult,
-    ): LoginResponseDto {
+    ): RegisterResponseDto {
 
         registerValidator.validate(payload, bindingResult)
 
         if (bindingResult.hasErrors()) {
-            return LoginResponseDto(
+            return RegisterResponseDto(
                 errors = mapOf(
                     *bindingResult.
                     allErrors
@@ -87,7 +98,7 @@ class AuthController (
         val savedUser = userService.save(user)
         val token = tokenService.createToken(savedUser)
 
-        return LoginResponseDto(
+        return RegisterResponseDto(
             token = token
         )
     }
