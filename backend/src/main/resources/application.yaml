@@ -17,5 +17,5 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 security:
   jwt:
-    access-key: ${JWT_TOKEN}
-    refresh-key: ${JWT_TOKEN}
+    access-key: ${ACCESS_TOKEN}
+    refresh-key: ${REFRESH_TOKEN}
