@@ -14,9 +14,7 @@ import me.fortibrine.nmtapp.model.User
 import me.fortibrine.nmtapp.service.HashService
 import me.fortibrine.nmtapp.service.TokenService
 import me.fortibrine.nmtapp.service.UserService
-import org.springframework.http.HttpStatus
 import org.springframework.validation.BindingResult
-import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -46,20 +44,17 @@ class AuthController (
 
         if (bindingResult.hasErrors()) {
             return LoginResponseDto(
-                errors = mapOf(
-                    *bindingResult.
-                    allErrors
-                        .map { (it as FieldError).field to it.defaultMessage }
-                        .toTypedArray()
-                )
+                errors = bindingResult.fieldErrors.associate {
+                    it.field to it.defaultMessage.orEmpty()
+                }
             )
         }
 
         val user = userService.findByUsername(payload.username) as User
-        val token = tokenService.createToken(user)
 
         return LoginResponseDto(
-            token = token
+            accessToken = tokenService.createAccessToken(user),
+            refreshToken = tokenService.createRefreshToken(user)
         )
     }
 
@@ -79,12 +74,9 @@ class AuthController (
 
         if (bindingResult.hasErrors()) {
             return RegisterResponseDto(
-                errors = mapOf(
-                    *bindingResult.
-                    allErrors
-                        .map { (it as FieldError).field to it.defaultMessage }
-                        .toTypedArray()
-                )
+                errors = bindingResult.fieldErrors.associate {
+                    it.field to it.defaultMessage.orEmpty()
+                }
             )
         }
 
@@ -96,10 +88,10 @@ class AuthController (
         )
 
         val savedUser = userService.save(user)
-        val token = tokenService.createToken(savedUser)
 
         return RegisterResponseDto(
-            token = token
+            accessToken = tokenService.createAccessToken(savedUser),
+            refreshToken = tokenService.createRefreshToken(savedUser)
         )
     }
 

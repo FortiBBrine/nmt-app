@@ -1,6 +1,7 @@
 package me.fortibrine.nmtapp.config
 
 import me.fortibrine.nmtapp.service.TokenService
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -42,7 +43,7 @@ class SecurityConfig (
         }
         http.authenticationManager { auth ->
             val jwt = auth as BearerTokenAuthenticationToken
-            val user = tokenService.parseToken(jwt.token) ?: throw InvalidBearerTokenException("Invalid token")
+            val user = tokenService.parseAccessToken(jwt.token) ?: throw InvalidBearerTokenException("Invalid token")
             UsernamePasswordAuthenticationToken(user, "", user.roles.map { SimpleGrantedAuthority(it) })
         }
 
